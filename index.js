@@ -40,7 +40,7 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 				return console.error('Error writing file:', err);
 			}
 
-			console.log('Deck updated. Waiting for changes…');
+			console.log('Deckset (' + outputFile + ') is up to date. It contains ' + slidesCount + ' slides. Watching Ulysses for changes…');
 		});
 	});
 }, 1000);
@@ -48,9 +48,18 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 /**
  * Read in a directory
  */
-function readDir(dirpath, callback) {
+
+var slidesCount = 0;	
+
+ function readDir(dirpath, callback) {
 
 	fs.readdir(dirpath, function gotFiles(err, files) {
+
+		files.forEach(element => {
+			if ( (element.indexOf('.md') != -1) && (element != outputFile) )  {
+				slidesCount = slidesCount + 1;
+			}
+		});
 
 		var tasks = [],
 		    order;
@@ -167,10 +176,11 @@ watcher.on('change', function onChange(path, stats) {
 	}
 
 	if (Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
-		console.log("Order changed");
+		console.log("Slides have been reordered or renamed.");
 	} else {
-		console.log("Change detected in '" + slideChanged + "'");		
+		console.log("Contents of slide '" + slideChanged + "' has been changed.");		
 	}
 	
+	slidesCount = 0; // Reset slides count
 	generateDeck();
 });
