@@ -65,19 +65,21 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 
 	fs.readdir(dirpath, function gotFiles(err, files) {
 
-		files.forEach(filename => {
-			if ( (filename.indexOf('.md') != -1) && (filename != outputFile) )  {
-				filePath = dirpath + '/' + filename;
-				fs.readFile(filePath, 'utf8', function getfile(err, str) {
-					if (!err) {
-						slidesPerFileCount = str.split('---').length;
-						slidesCount = slidesCount + slidesPerFileCount; 
-					} else {
-						console.error(err);
-					}
-				});
-			}
-		});
+		if (files) {
+			files.forEach(filename => {
+				if ( (filename.indexOf('.md') != -1) && (filename != outputFile) )  {
+					filePath = dirpath + '/' + filename;
+					fs.readFile(filePath, 'utf8', function getfile(err, str) {
+						if (!err) {
+							slidesPerFileCount = str.split('---').length;
+							slidesCount = slidesCount + slidesPerFileCount; 
+						} else {
+							console.error(err);
+						}
+					});
+				}
+			});	
+		};
 
 		var tasks = [],
 		    order;
