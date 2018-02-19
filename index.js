@@ -8,18 +8,30 @@ var chokidar = require('chokidar'),
     Blast = require('protoblast')(false),
     Plist = require('plist'),
     uname,
-    dir,
+	 dir,
+	 outputFile,
+	 slidesCount,
     fs = require('fs'),
     Fn = Blast.Bound.Function;
 
 // Get the source dir
 dir = libpath.resolve(process.cwd(), process.argv[2] || '.');
 
-// The name of the ulysses file
+// Name of the Ulysses PLIST
 uname = '.Ulysses-Group.plist';
 
-// The name of the output file
+// Name of the output file
 outputFile = 'deck.md';
+
+// How many slides are there?
+slidesCount = 0;	
+
+/**
+ * Log function
+ */
+log = function(message) {
+	console.log('[' + Blast.Bound.Date.format(new Date(), 'H:i') + '] ' + message) ;
+}
 
 /**
  * Update files
@@ -40,7 +52,7 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 				return console.error('Error writing file:', err);
 			}
 
-			console.log('Deckset (' + outputFile + ') is up to date. It contains ' + slidesCount + ' slides. Watching Ulysses for changes…');
+			log('Your Deckset (' + outputFile + ') is up to date. It contains ' + slidesCount + ' slides. Watching Ulysses for changes…');
 		});
 	});
 }, 1000);
@@ -49,15 +61,21 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
  * Read in a directory
  */
 
-var slidesCount = 0;	
-
  function readDir(dirpath, callback) {
 
 	fs.readdir(dirpath, function gotFiles(err, files) {
 
-		files.forEach(element => {
-			if ( (element.indexOf('.md') != -1) && (element != outputFile) )  {
-				slidesCount = slidesCount + 1;
+		files.forEach(filename => {
+			if ( (filename.indexOf('.md') != -1) && (filename != outputFile) )  {
+				filePath = dirpath + '/' + filename;
+				fs.readFile(filePath, 'utf8', function getfile(err, str) {
+					if (!err) {
+						slidesPerFileCount = str.split('---').length;
+						slidesCount = slidesCount + slidesPerFileCount; 
+					} else {
+						console.error(err);
+					}
+				});
 			}
 		});
 
@@ -176,9 +194,9 @@ watcher.on('change', function onChange(path, stats) {
 	}
 
 	if (Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
-		console.log("Slides have been reordered or renamed.");
+		log("Slides have been reordered or renamed.");
 	} else {
-		console.log("Contents of slide '" + slideChanged + "' has been changed.");		
+		log("Contents of slide '" + slideChanged + "' has been changed.");		
 	}
 	
 	slidesCount = 0; // Reset slides count
