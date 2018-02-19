@@ -14,11 +14,14 @@ dir = libpath.resolve(process.cwd(), process.argv[2] || '.');
 // The name of the ulysses file
 uname = '.Ulysses-Group.plist';
 
+// The name of the output file
+outputFile = 'deck.md';
+
 /**
  * Update files
  */
 function generateDeck() {
-	console.log('Generating deck ...');
+	console.log('Regenerating deck…');
 
 	readDir(dir, function gotSheets(err, results) {
 
@@ -28,13 +31,13 @@ function generateDeck() {
 
 		results = Blast.Bound.Array.flatten(results);
 
-		fs.writeFile('output.md', results.join('\n---\n'), function written(err) {
+		fs.writeFile(outputFile, results.join('\n---\n'), function written(err) {
 
 			if (err) {
 				return console.error('Error writing file:', err);
 			}
 
-			console.log('Done!\n');
+			console.log('Waiting for changes…');
 		});
 	});
 }
@@ -50,7 +53,7 @@ function readDir(dirpath, callback) {
 		    order;
 
 		if (err) {
-			console.warn('Error reading dir "' + libpath.relative(dir, dirpath) + '"', err.code);
+			// console.warn('Error reading dir "' + libpath.relative(dir, dirpath) + '"', err.code);
 			return callback(null, []);
 		}
 
@@ -88,7 +91,7 @@ function readDir(dirpath, callback) {
 
 				var file_path;
 
-				if (name == 'output.md') {
+				if (name == outputFile) {
 					return;
 				}
 
@@ -98,7 +101,7 @@ function readDir(dirpath, callback) {
 					fs.readFile(file_path, 'utf8', function gotFile(err, result) {
 
 						if (err) {
-							console.warn('Error reading file "' + libpath.relative(dir, file_path) + '":', err.code);
+							// console.warn('Error reading file "' + libpath.relative(dir, file_path) + '":', err.code);
 							return next(null, []);
 						}
 
@@ -147,7 +150,7 @@ watcher = chokidar.watch(dir);
 
 watcher.on('change', function onChange(path, stats) {
 
-	if (Blast.Bound.String.endsWith(path, 'output.md')) {
+	if (Blast.Bound.String.endsWith(path, outputFile)) {
 		return;
 	}
 
