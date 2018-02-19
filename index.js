@@ -50,7 +50,8 @@ function readDir(dirpath, callback) {
 		    order;
 
 		if (err) {
-			return callback(err);
+			console.warn('Error reading dir '+ dirpath, err);
+			return callback(null, []);
 		}
 
 		Fn.series(function getUlyssesFile(next) {
@@ -101,11 +102,11 @@ function readDir(dirpath, callback) {
 				var file_path = libpath.resolve(dirpath, name);
 
 				tasks.push(function readFile(next) {
-
 					fs.readFile(file_path, 'utf8', function gotFile(err, result) {
 
 						if (err) {
-							return next(err);
+							console.warn('Error reading file ' + file_path + ':', err);
+							return next(null, []);
 						}
 
 						return next(null, result);
