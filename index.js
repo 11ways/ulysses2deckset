@@ -1,4 +1,8 @@
+// Welcome message
+console.log('Ulysses Deckset started.');
+
 var chokidar = require('chokidar'),
+    generateDeck,
     watcher,
     libpath = require('path'),
     Blast = require('protoblast')(false),
@@ -20,8 +24,7 @@ outputFile = 'deck.md';
 /**
  * Update files
  */
-function generateDeck() {
-	console.log('Regenerating deck…');
+generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 
 	readDir(dir, function gotSheets(err, results) {
 
@@ -37,10 +40,10 @@ function generateDeck() {
 				return console.error('Error writing file:', err);
 			}
 
-			console.log('Waiting for changes…');
+			console.log('Deck updated. Waiting for changes…');
 		});
 	});
-}
+}, 1000);
 
 /**
  * Read in a directory
@@ -150,6 +153,11 @@ watcher = chokidar.watch(dir);
 
 watcher.on('change', function onChange(path, stats) {
 
+	var slideChanged = path.replace(process.cwd()+"/","");
+
+	slideChanged = slideChanged.replace(".md","");
+	slideChanged = slideChanged.replace("/"," → ");
+
 	if (Blast.Bound.String.endsWith(path, outputFile)) {
 		return;
 	}
@@ -158,6 +166,11 @@ watcher.on('change', function onChange(path, stats) {
 		return;
 	}
 
-	console.log('Detected change in', path);
+	if (Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
+		console.log("Order changed");
+	} else {
+		console.log("Change detected in '" + slideChanged + "'");		
+	}
+	
 	generateDeck();
 });
