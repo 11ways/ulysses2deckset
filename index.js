@@ -105,7 +105,14 @@ function readDir(dirpath, callback) {
 			sheets = Blast.Bound.Array.flatten(order.sheetClusters);
 
 			sheets.forEach(function eachFile(name) {
-				var file_path = libpath.resolve(dirpath, name);
+
+				var file_path;
+
+				if (name == 'output.md') {
+					return;
+				}
+
+				file_path = libpath.resolve(dirpath, name);
 
 				tasks.push(function readFile(next) {
 					fs.readFile(file_path, 'utf8', function gotFile(err, result) {
