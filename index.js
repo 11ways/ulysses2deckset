@@ -136,13 +136,11 @@ watcher = chokidar.watch(dir);
 
 watcher.on('change', function onChange(path, stats) {
 
-	console.log('Change:', path);
-
-	if (!Blast.Bound.String.endsWith(path, '.md') && !Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
+	if (Blast.Bound.String.endsWith('output.md')) {
 		return;
 	}
 
-	if (path == 'output.md') {
+	if (!Blast.Bound.String.endsWith(path, '.md') && !Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
 		return;
 	}
 
