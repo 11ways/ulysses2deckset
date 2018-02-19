@@ -1,0 +1,11 @@
+{
+	"name": "ulysses-joiner",
+	"description": "Automatically join ulysses md files for deckset",
+	"version": "0.1.0",
+	"license": "GPL-3.0",
+	"dependencies": {
+		"chokidar"   : "~2.0.2",
+		"plist"      : "~2.1.0",
+		"protoblast" : "~0.5.0"
+	}
+}

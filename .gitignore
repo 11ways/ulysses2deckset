@@ -1,0 +1,29 @@
+# Ignore IDE specific files
+*.komodo*
+*.sublime*
+.idea/
+
+# Ignore special files
+.DS_Store
+.fuse*
+._*
+*.bin
+
+# Ignore log files
+npm-debug.log
+v8.log
+*.cpuprofile
+callgrind*
+*.wtf-trace
+
+# Ignore node modules
+/node_modules/
+files/
+temp/
+
+# Ignore test files
+scratch*
+log.json
+
+# Ignore dist folder
+dist/

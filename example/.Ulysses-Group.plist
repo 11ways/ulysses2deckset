@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>childOrder</key>
+	<array>
+		<string>Zelf testen</string>
+		<string>Inleiding</string>
+	</array>
+	<key>createMarkedFile</key>
+	<integer>0</integer>
+	<key>resolutionData</key>
+	<dict>
+		<key>childOrder</key>
+		<dict>
+			<key>Inleiding</key>
+			<dict>
+				<key>lastModification</key>
+				<real>540738522.52865303</real>
+				<key>version</key>
+				<dict>
+					<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+					<integer>8</integer>
+				</dict>
+			</dict>
+			<key>Zelf testen</key>
+			<dict>
+				<key>lastModification</key>
+				<real>540739569.71599603</real>
+				<key>version</key>
+				<dict>
+					<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+					<integer>10</integer>
+				</dict>
+			</dict>
+		</dict>
+		<key>createMarkedFile</key>
+		<real>540738065.23155105</real>
+		<key>sheetClusters</key>
+		<dict>
+			<key>1. Inleiding.md</key>
+			<dict>
+				<key>explicitUnassignment</key>
+				<true/>
+				<key>firstUnassignment</key>
+				<real>540738561.24116397</real>
+				<key>lastModification</key>
+				<real>540738561.24116397</real>
+				<key>version</key>
+				<dict>
+					<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+					<integer>17</integer>
+				</dict>
+			</dict>
+			<key>2. Accessibility is een ingesteldheid.md</key>
+			<dict>
+				<key>explicitUnassignment</key>
+				<true/>
+				<key>firstUnassignment</key>
+				<real>540738598.53499806</real>
+				<key>lastModification</key>
+				<real>540738598.53499806</real>
+				<key>version</key>
+				<dict>
+					<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
+	<key>sheetClusters</key>
+	<array>
+		<array>
+			<string>1. Inleiding.md</string>
+		</array>
+		<array>
+			<string>2. Accessibility is een ingesteldheid.md</string>
+		</array>
+	</array>
+	<key>storeFormatVersion</key>
+	<integer>1</integer>
+	<key>versioning</key>
+	<dict>
+		<key>childOrder</key>
+		<dict>
+			<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+			<integer>10</integer>
+		</dict>
+		<key>createMarkedFile</key>
+		<dict>
+			<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+			<integer>4</integer>
+		</dict>
+		<key>sheetClusters</key>
+		<dict>
+			<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+			<integer>18</integer>
+		</dict>
+	</dict>
+</dict>
+</plist>
