@@ -82,26 +82,6 @@ function readDir(dirpath, callback) {
 				return next(null, []);
 			}
 
-			// It has a "childOrder", so subfolders are needed?
-			// The upper example file has a "sheetClusters" array with non-existing files,
-			// so I guess those have to be ignored
-			if (order.childOrder) {
-				order.childOrder.forEach(function eachFolder(name) {
-					var sub_path = libpath.resolve(dirpath, name);
-
-					tasks.push(function doFolder(next) {
-						readDir(sub_path, function doneSubFolder(err, result) {
-
-							if (err) {
-								return next(err);
-							}
-
-							next(null, result);
-						});
-					});
-				});
-			}
-
 			sheets = Blast.Bound.Array.flatten(order.sheetClusters);
 
 			sheets.forEach(function eachFile(name) {
@@ -126,6 +106,24 @@ function readDir(dirpath, callback) {
 					});
 				});
 			});
+
+			// Subfolders come after files
+			if (order.childOrder) {
+				order.childOrder.forEach(function eachFolder(name) {
+					var sub_path = libpath.resolve(dirpath, name);
+
+					tasks.push(function doFolder(next) {
+						readDir(sub_path, function doneSubFolder(err, result) {
+
+							if (err) {
+								return next(err);
+							}
+
+							next(null, result);
+						});
+					});
+				});
+			}
 
 			Fn.parallel(tasks, next);
 
