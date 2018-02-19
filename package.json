@@ -3,6 +3,9 @@
 	"description": "Automatically join ulysses md files for deckset",
 	"version": "0.1.0",
 	"license": "GPL-3.0",
+	"bin": {
+		"ulysses-joiner": "index.js"
+	},
 	"dependencies": {
 		"chokidar"   : "~2.0.2",
 		"plist"      : "~2.1.0",

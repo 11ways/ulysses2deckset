@@ -50,19 +50,23 @@ function readDir(dirpath, callback) {
 		    order;
 
 		if (err) {
-			console.warn('Error reading dir '+ dirpath, err);
+			console.warn('Error reading dir "' + libpath.relative(dir, dirpath) + '"', err.code);
 			return callback(null, []);
 		}
 
 		Fn.series(function getUlyssesFile(next) {
+
+			var file_path = libpath.resolve(dirpath, uname);
+
 			if (files.indexOf(uname) == -1) {
 				return next();
 			}
 
-			fs.readFile(libpath.resolve(dirpath, uname), 'utf8', function gotFile(err, str) {
+			fs.readFile(file_path, 'utf8', function gotFile(err, str) {
 
 				if (err) {
-					return next(err);
+					console.warn('Error reading plist file "' + libpath.relative(dir, file_path) + '":', err.code);
+					return next();
 				}
 
 				order = Plist.parse(str);
@@ -73,6 +77,10 @@ function readDir(dirpath, callback) {
 
 			var tasks = [],
 			    sheets;
+
+			if (!order) {
+				return next(null, []);
+			}
 
 			// It has a "childOrder", so subfolders are needed?
 			// The upper example file has a "sheetClusters" array with non-existing files,
@@ -92,8 +100,6 @@ function readDir(dirpath, callback) {
 						});
 					});
 				});
-
-				return Fn.parallel(tasks, next);
 			}
 
 			sheets = Blast.Bound.Array.flatten(order.sheetClusters);
@@ -105,7 +111,7 @@ function readDir(dirpath, callback) {
 					fs.readFile(file_path, 'utf8', function gotFile(err, result) {
 
 						if (err) {
-							console.warn('Error reading file ' + file_path + ':', err);
+							console.warn('Error reading file "' + libpath.relative(dir, file_path) + '":', err.code);
 							return next(null, []);
 						}
 
