@@ -31,7 +31,7 @@ function generateDeck() {
 
 		results = Blast.Bound.Array.flatten(results);
 
-		fs.writeFile(outputFile, results.join('\n---\n'), function written(err) {
+		fs.writeFile(outputFile, results.join('\n\n---\n\n'), function written(err) {
 
 			if (err) {
 				return console.error('Error writing file:', err);
