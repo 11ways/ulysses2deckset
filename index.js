@@ -1,5 +1,5 @@
 // Welcome message
-console.log('Ulysses Deckset started.');
+console.log('🦋 Welcome to the Ulysses Deckset Generator!');
 
 var chokidar = require('chokidar'),
     generateDeck,
