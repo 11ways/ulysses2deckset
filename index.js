@@ -136,7 +136,7 @@ watcher = chokidar.watch(dir);
 
 watcher.on('change', function onChange(path, stats) {
 
-	if (Blast.Bound.String.endsWith('output.md')) {
+	if (Blast.Bound.String.endsWith(path, 'output.md')) {
 		return;
 	}
 
