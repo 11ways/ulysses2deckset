@@ -7,7 +7,8 @@ var chokidar = require('chokidar'),
     libpath = require('path'),
     Blast = require('protoblast')(false),
     Plist = require('plist'),
-    uname,
+	 chalk = require('chalk'),
+	 uname,
 	 dir,
 	 outputFile,
 	 slidesCount,
@@ -30,7 +31,7 @@ slidesCount = 0;
  * Log function
  */
 log = function(message) {
-	console.log('[' + Blast.Bound.Date.format(new Date(), 'H:i') + '] ' + message) ;
+	console.log('[' + chalk.yellow(Blast.Bound.Date.format(new Date(), 'H:i')) + '] ' + message) ;
 }
 
 /**

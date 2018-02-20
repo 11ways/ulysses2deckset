@@ -7,8 +7,9 @@
 		"ulysses-joiner": "index.js"
 	},
 	"dependencies": {
-		"chokidar"   : "~2.0.2",
-		"plist"      : "~2.1.0",
-		"protoblast" : "~0.5.0"
+		"chalk": "^2.3.1",
+		"chokidar": "~2.0.2",
+		"plist": "~2.1.0",
+		"protoblast": "~0.5.0"
 	}
 }
