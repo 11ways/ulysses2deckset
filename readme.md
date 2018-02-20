@@ -1,4 +1,4 @@
-# Ulysses → Deckset
+# 🦋 Ulysses → Deckset
 
 > This command line tool makes it really easy to automatically generate Deckset presentations from a Ulysses content folder. 
 
