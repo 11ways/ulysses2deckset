@@ -295,7 +295,7 @@ function processSheet(dirpath, filename, callback) {
 
 				// Make the path relative? To the start directory (dir)
 				// or the current working directory? (process.cwd())
-				//asset_path = libpath.relative(dir, asset_path);
+				asset_path = libpath.relative(process.cwd(), asset_path);
 
 				// Replace all assets links
 				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
@@ -326,10 +326,10 @@ watcher = chokidar.watch(dir);
 
 watcher.on('change', function onChange(path, stats) {
 
-	var slideChanged = path.replace(process.cwd()+"/","");
+	var slide_changed = libpath.relative(process.cwd(), path);
 
-	slideChanged = slideChanged.replace(".md","");
-	slideChanged = slideChanged.replace("/"," → ");
+	slide_changed = slide_changed.replace('.md', '');
+	slide_changed = slide_changed.split(libpath.sep).join(' →  ');
 
 	if (Blast.Bound.String.endsWith(path, output_file)) {
 		return;
@@ -340,11 +340,10 @@ watcher.on('change', function onChange(path, stats) {
 	}
 
 	if (Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
-		log("Slides have been reordered or renamed.");
+		log('Slides have been reordered or renamed.');
 	} else {
-		log("Contents of slide '" + slideChanged + "' has been changed.");
+		log('Contents of slide "' + slide_changed + '" has been changed.');
 	}
-	
-	slidesCount = 0; // Reset slides count
+
 	generateDeck();
 });
