@@ -1,8 +1,8 @@
 # 🦋 Ulysses → Deckset
 
-> This command line tool makes it really easy to automatically generate Deckset presentations from a Ulysses content folder. 
+> This command line tool makes it really easy to automatically generate Deckset presentations from a Ulysses content folder.
 
-**ulysses2deckset** watches a content folder in Ulysses and automatically rebuilds your Deckset slidedeck whenever you save a Ulysses sheet ('slide'), drag them in a different order or change their folder hierarchy. 
+**ulysses2deckset** watches a content folder in Ulysses and automatically rebuilds your Deckset slidedeck whenever you save a Ulysses sheet ('slide'), drag them in a different order or change their folder hierarchy.
 
 For this command line tool to work, you need these two great Mac apps as well:
 
