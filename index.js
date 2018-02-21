@@ -297,6 +297,8 @@ function processSheet(dirpath, filename, callback) {
 				// or the current working directory? (process.cwd())
 				asset_path = libpath.relative(process.cwd(), asset_path);
 
+				asset_path = asset_path.replace(/ /g, '\\ ');
+
 				// Replace all assets links
 				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
 			}
