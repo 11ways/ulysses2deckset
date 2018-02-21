@@ -5,6 +5,7 @@
 console.log('🦋 Welcome to the Ulysses Deckset Generator!');
 
 var generateDeck,
+    enable_debug,
     output_file,
     file_path,
     watcher,
@@ -17,6 +18,9 @@ var generateDeck,
     dir,
     fs = require('fs'),
     Fn = Blast.Bound.Function;
+
+// Set to true in order to enable debug
+enable_debug = false;
 
 // Get the source dir
 dir = libpath.resolve(process.cwd(), process.argv[2] || '.');
@@ -37,7 +41,37 @@ output_file = 'deck.md';
  * @return   {Boolean}
  */
 function log(message) {
-	console.log('[' + chalk.yellow(Blast.Bound.Date.format(new Date(), 'H:i')) + ']', message);
+	console.log('[' + chalk.yellow(Blast.Bound.Date.format(new Date(), 'H:i')) + ']', ...arguments);
+}
+
+/**
+ * Verbose log function
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @since    0.1.0
+ * @version  0.1.0
+ *
+ * @return   {Boolean}
+ */
+function verbose(message) {
+	if (enable_debug) {
+		console.info('[' + chalk.blue(Blast.Bound.Date.format(new Date(), 'H:i')) + ']', ...arguments);
+	}
+}
+
+/**
+ * Warning log function
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @since    0.1.0
+ * @version  0.1.0
+ *
+ * @return   {Boolean}
+ */
+function warn(message) {
+	if (enable_debug) {
+		console.warn('[' + chalk.orange(Blast.Bound.Date.format(new Date(), 'H:i')) + ']', ...arguments);
+	}
 }
 
 /**
@@ -111,11 +145,13 @@ function readDir(dirpath, callback) {
 			fs.readFile(file_path, 'utf8', function gotFile(err, str) {
 
 				if (err) {
-					console.warn('Error reading plist file "' + libpath.relative(dir, file_path) + '":', err.code);
+					warn('Error reading plist file "' + libpath.relative(dir, file_path) + '":', err.code);
 					return next();
 				}
 
 				order = Plist.parse(str);
+
+				verbose('Ulysses order for:', dirpath, order);
 
 				next();
 			});
@@ -142,15 +178,7 @@ function readDir(dirpath, callback) {
 				file_path = libpath.resolve(dirpath, name);
 
 				tasks.push(function readFile(next) {
-					fs.readFile(file_path, 'utf8', function gotFile(err, result) {
-
-						if (err) {
-							// console.warn('Error reading file "' + libpath.relative(dir, file_path) + '":', err.code);
-							return next(null, []);
-						}
-
-						return next(null, result);
-					});
+					processSheet(dirpath, name, next);
 				});
 			});
 
@@ -186,6 +214,110 @@ function readDir(dirpath, callback) {
 	});
 }
 
+/**
+ * Process a sheet
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @author   Roel Van Gils   <roel@11ways.be>
+ * @since    0.1.0
+ * @version  0.1.0
+ *
+ * @param    {String}   dirpath
+ * @param    {String}   filename
+ * @param    {Function} callback
+ */
+function processSheet(dirpath, filename, callback) {
+
+	var is_bundled,
+	    asset_path,
+	    full_path = libpath.resolve(dirpath, filename),
+	    new_dir,
+	    source,
+	    stats;
+
+	Fn.series(function getStats(next) {
+		fs.stat(full_path, function gotStats(err, result) {
+
+			if (err) {
+				return next(err);
+			}
+
+			stats = result;
+			next();
+		});
+	}, function processDir(next) {
+
+		// If the full path is not a directory, skip this function
+		if (!stats.isDirectory()) {
+			return next();
+		}
+
+		// Remember the link to this directory
+		new_dir = libpath.resolve(dirpath, filename);
+
+		// The actual md file is actually in this new_dir
+		// So we'll prepend the filename with the directory
+		// (this won't we a true "filename" only, strictly speaking, but it works)
+		filename = libpath.join(filename, 'text.md');
+
+		// Construct the full path to this text.md file
+		full_path = libpath.resolve(dirpath, filename);
+
+		// Remember that we're working on a bundled file,
+		// so we can replace `assets/` folders
+		is_bundled = true;
+
+		// Get the stats of the new file
+		fs.stat(full_path, function gotNewStats(err, result) {
+
+			if (err) {
+				return next(err);
+			}
+
+			stats = result;
+			next();
+		});
+	}, function processSimple(next) {
+		if (!stats.isFile()) {
+			return next();
+		}
+
+		fs.readFile(full_path, 'utf8', function gotFile(err, result) {
+
+			if (err) {
+				return next(err);
+			}
+
+			source = result;
+
+			if (is_bundled) {
+				asset_path = libpath.resolve(new_dir, 'assets');
+
+				// Make the path relative? To the start directory (dir)
+				// or the current working directory? (process.cwd())
+				//asset_path = libpath.relative(dir, asset_path);
+
+				// Replace all assets links
+				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
+			}
+
+			return next(null);
+		});
+	}, function done(err) {
+
+		if (err) {
+			verbose('Error reading file "' + libpath.relative(dirpath, full_path) + '":', err.code);
+			return callback(null, []);
+		}
+
+		// We have to return it as an array,
+		// because in the end we just flatten all arrays and concatenate them
+		source = Blast.Bound.Array.cast(source);
+
+		callback(null, source);
+	});
+}
+
 // Do initial check
 generateDeck();
 
@@ -210,7 +342,7 @@ watcher.on('change', function onChange(path, stats) {
 	if (Blast.Bound.String.endsWith(path, '.Ulysses-Group.plist')) {
 		log("Slides have been reordered or renamed.");
 	} else {
-		log("Contents of slide '" + slideChanged + "' has been changed.");		
+		log("Contents of slide '" + slideChanged + "' has been changed.");
 	}
 	
 	slidesCount = 0; // Reset slides count
