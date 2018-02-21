@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>childOrder</key>
+	<array>
+		<string>subfolder</string>
+	</array>
+	<key>resolutionData</key>
+	<dict>
+		<key>childOrder</key>
+		<dict>
+			<key>subfolder</key>
+			<dict>
+				<key>lastModification</key>
+				<real>540768940.97874999</real>
+				<key>version</key>
+				<dict>
+					<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+					<integer>4</integer>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
+	<key>storeFormatVersion</key>
+	<integer>1</integer>
+	<key>versioning</key>
+	<dict>
+		<key>childOrder</key>
+		<dict>
+			<key>3f214528fbe91813cbca9b4f9eb10249713bf3d0cca89845b0563b759583f89c</key>
+			<integer>5</integer>
+		</dict>
+	</dict>
+</dict>
+</plist>
