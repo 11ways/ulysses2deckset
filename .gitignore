@@ -28,3 +28,4 @@ log.json
 # Ignore dist folder
 dist/
 output.md
+deck.md

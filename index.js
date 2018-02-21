@@ -1,19 +1,20 @@
 #!/usr/bin/env node
+"use strict";
 
 // Welcome message
 console.log('🦋 Welcome to the Ulysses Deckset Generator!');
 
-var chokidar = require('chokidar'),
-    generateDeck,
+var generateDeck,
+    output_file,
+    file_path,
     watcher,
+    chokidar = require('chokidar'),
     libpath = require('path'),
     Blast = require('protoblast')(false),
     Plist = require('plist'),
-	 chalk = require('chalk'),
-	 uname,
-	 dir,
-	 outputFile,
-	 slidesCount,
+    chalk = require('chalk'),
+    uname,
+    dir,
     fs = require('fs'),
     Fn = Blast.Bound.Function;
 
@@ -24,65 +25,72 @@ dir = libpath.resolve(process.cwd(), process.argv[2] || '.');
 uname = '.Ulysses-Group.plist';
 
 // Name of the output file
-outputFile = 'deck.md';
-
-// How many slides are there?
-slidesCount = 0;	
+output_file = 'deck.md';
 
 /**
  * Log function
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @since    0.1.0
+ * @version  0.1.0
+ *
+ * @return   {Boolean}
  */
-log = function(message) {
-	console.log('[' + chalk.yellow(Blast.Bound.Date.format(new Date(), 'H:i')) + '] ' + message) ;
+function log(message) {
+	console.log('[' + chalk.yellow(Blast.Bound.Date.format(new Date(), 'H:i')) + ']', message);
 }
 
 /**
- * Update files
+ * Actually generate the deckset md file
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @since    0.1.0
+ * @version  0.1.0
  */
 generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 
 	readDir(dir, function gotSheets(err, results) {
 
+		var slides_count;
+
 		if (err) {
 			throw err;
 		}
 
-		results = Blast.Bound.Array.flatten(results);
+		// Concatenate all the slides
+		results = Blast.Bound.Array.flatten(results).join('\n\n---\n\n');
 
-		fs.writeFile(outputFile, results.join('\n\n---\n\n'), function written(err) {
+		// Count the slides
+		slides_count = 1 + Blast.Bound.String.count(results, '\n---\n');
+
+		fs.writeFile(output_file, results, function written(err) {
 
 			if (err) {
 				return console.error('Error writing file:', err);
 			}
 
-			log('Your Deckset (' + outputFile + ') is up to date. It contains ' + slidesCount + ' slides. Watching Ulysses for changes…');
+			log('Your Deckset (' + output_file + ') is up to date. It contains ' + slides_count + ' slides. Watching Ulysses for changes…');
 		});
 	});
 }, 1000);
 
 /**
  * Read in a directory
+ *
+ * @author   Jelle De Loecker   <jelle@develry.be>
+ * @author   Roel Van Gils   <roel@11ways.be>
+ * @since    0.1.0
+ * @version  0.1.0
+ *
+ * @param    {String}   dirpath
+ * @param    {}
  */
+function readDir(dirpath, callback) {
 
- function readDir(dirpath, callback) {
+	var slides_count = 0;
 
+	// Get all the files in the given path
 	fs.readdir(dirpath, function gotFiles(err, files) {
-
-		if (files) {
-			files.forEach(filename => {
-				if ( (filename.indexOf('.md') != -1) && (filename != outputFile) )  {
-					filePath = dirpath + '/' + filename;
-					fs.readFile(filePath, 'utf8', function getfile(err, str) {
-						if (!err) {
-							slidesPerFileCount = str.split('---').length;
-							slidesCount = slidesCount + slidesPerFileCount; 
-						} else {
-							console.error(err);
-						}
-					});
-				}
-			});	
-		};
 
 		var tasks = [],
 		    order;
@@ -126,10 +134,11 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 
 				var file_path;
 
-				if (name == outputFile) {
+				if (name == output_file) {
 					return;
 				}
 
+				// Construct the absolute path to the md file
 				file_path = libpath.resolve(dirpath, name);
 
 				tasks.push(function readFile(next) {
@@ -190,7 +199,7 @@ watcher.on('change', function onChange(path, stats) {
 	slideChanged = slideChanged.replace(".md","");
 	slideChanged = slideChanged.replace("/"," → ");
 
-	if (Blast.Bound.String.endsWith(path, outputFile)) {
+	if (Blast.Bound.String.endsWith(path, output_file)) {
 		return;
 	}
 
