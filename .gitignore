@@ -29,3 +29,6 @@ log.json
 dist/
 output.md
 deck.md
+
+# Ignore examples folder
+example/
