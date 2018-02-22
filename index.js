@@ -324,7 +324,7 @@ function processSheet(dirpath, filename, callback) {
 generateDeck();
 
 // Start watching changes
-watcher = chokidar.watch(dir);
+watcher = chokidar.watch(dir, {usePolling: true, interval: 900});
 
 watcher.on('change', function onChange(path, stats) {
 
