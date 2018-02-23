@@ -258,8 +258,8 @@ function processSheet(dirpath, filename, callback) {
 			// Parse the binary plist
 			result = Blast.Bound.Array.flatten(BPlist.parseBuffer(result));
 
-			if (result.indexOf('hide\n0') > -1 || result.indexOf('hide') > -1) {
-				err = new Error('This is a hidden sheet');
+			if (result.indexOf('skip\n0') > -1 || result.indexOf('skip') > -1) {
+				err = new Error('This sheet should be skipped');
 				err.code = 'HIDDEN';
 
 				return next(err);
