@@ -259,7 +259,7 @@ function processSheet(dirpath, filename, callback) {
 			result = Blast.Bound.Array.flatten(BPlist.parseBuffer(result));
 
 			if (result.indexOf('hide\n0') > -1 || result.indexOf('hide') > -1) {
-				err = new Error('This is a hidden file');
+				err = new Error('This is a hidden sheet');
 				err.code = 'HIDDEN';
 
 				return next(err);
