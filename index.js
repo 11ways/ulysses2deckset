@@ -10,10 +10,12 @@ var generateDeck,
     file_path,
     watcher,
     chokidar = require('chokidar'),
-    libpath = require('path'),
-    Blast = require('protoblast')(false),
-    Plist = require('plist'),
-    chalk = require('chalk'),
+	 libpath  = require('path'),
+	 BPlist   = require('bplist-parser'),
+    Blast    = require('protoblast')(false),
+    Plist    = require('plist'),
+	 xattr    = require('fs-xattr'),
+	 chalk    = require('chalk'),
     uname,
     dir,
     fs = require('fs'),
@@ -245,6 +247,27 @@ function processSheet(dirpath, filename, callback) {
 			stats = result;
 			next();
 		});
+	}, function checkHidden(next) {
+
+		xattr.get(full_path, 'com.apple.metadata:_kMDItemUserTags', function gotTags(err, result) {
+
+			if (err || !result) {
+				return next();
+			}
+
+			// Parse the binary plist
+			result = Blast.Bound.Array.flatten(BPlist.parseBuffer(result));
+
+			if (result.indexOf('hide\n0') > -1 || result.indexOf('hide') > -1) {
+				err = new Error('This is a hidden file');
+				err.code = 'HIDDEN';
+
+				return next(err);
+			}
+
+			return next();
+		});
+
 	}, function processDir(next) {
 
 		// If the full path is not a directory, skip this function
@@ -302,6 +325,7 @@ function processSheet(dirpath, filename, callback) {
 
 				// Replace all assets links
 				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
+
 			}
 
 			// Ulysses fix for absolute URLS in Markdown ]()(
