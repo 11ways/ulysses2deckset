@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 
-// Welcome message
-console.log('🦋 Welcome to the Ulysses Deckset Generator!');
-
 var generateDeck,
     enable_debug,
     output_file,
@@ -19,7 +16,9 @@ var generateDeck,
     uname,
     dir,
     fs = require('fs'),
-    Fn = Blast.Bound.Function;
+    Fn = Blast.Bound.Function,
+	 util = require('util'),
+	 exec = require('child_process').exec;
 
 // Set to true in order to enable debug
 enable_debug = false;
@@ -32,6 +31,12 @@ uname = '.Ulysses-Group.plist';
 
 // Name of the output file
 output_file = 'deck.md';
+
+// Welcome!
+console.log('🦋 Welcome to the Ulysses Deckset Generator!');
+
+// Launch Deckset
+exec('rm ' + output_file + ';touch ' + output_file + ';open -a Deckset ' + output_file);
 
 /**
  * Log function
