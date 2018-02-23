@@ -30,7 +30,7 @@ dir = libpath.resolve(process.cwd(), process.argv[2] || '.');
 uname = '.Ulysses-Group.plist';
 
 // Name of the output file
-output_file = 'deck.md';
+output_file = '.deck.md';
 
 // Welcome!
 console.log('🦋 Welcome to the Ulysses Deckset Generator!');
