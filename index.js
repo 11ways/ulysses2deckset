@@ -330,11 +330,13 @@ function processSheet(dirpath, filename, callback) {
 
 				// Replace all assets links
 				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
-
 			}
 
 			// Ulysses fix for absolute URLS in Markdown ]()(
 			source = source.replace(/\]\(\)\(/g, '](');
+
+			// Trim the file to remove trailing or heading whitespace
+			source = source.trim();
 
 			return next(null);
 		});
