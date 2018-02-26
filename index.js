@@ -325,6 +325,46 @@ function processSheet(dirpath, filename, callback) {
 
 			source = result;
 
+			// Ulysses path fix in Markdown: "]()("
+			source = source.replace(/\]\(\)\(/g, '](');
+
+			source = source.replace(/(\]\((.*?)( "(.*?)")?\))/g, function match(all, p1, path, p3, alt_attribute) {
+
+				var result;
+
+				// Leave footnotes alone
+				if (!path) {
+					return ']()';
+				}
+
+				// If it's not an asset path and not a http link
+				if (path.indexOf('assets/') == -1 && path.indexOf('http') == -1) {
+
+					// See if this is a file in the current directory
+					// Certain files (like movs) don't get added to the assets folder
+					asset_path = libpath.resolve(full_path, '..', '..', path);
+
+					// Make sure this file exists
+					if (fs.existsSync(asset_path)) {
+
+						// Make it a relative path
+						asset_path = libpath.relative(process.cwd(), asset_path);
+
+						path = asset_path;
+					}
+				}
+
+				result = '](' + path;
+
+				if (alt_attribute) {
+					result += ' "' + alt_attribute + '"';
+				}
+
+				result += ')';
+
+				return result;
+			});
+
 			if (is_bundled) {
 				asset_path = libpath.resolve(new_dir, 'assets');
 
@@ -338,9 +378,6 @@ function processSheet(dirpath, filename, callback) {
 				// Replace all assets links
 				source = source.replace(/\]\(assets\//g, '](' + asset_path + '/');
 			}
-
-			// Ulysses fix for absolute URLS in Markdown ]()(
-			source = source.replace(/\]\(\)\(/g, '](');
 
 			// Trim the file to remove trailing or heading whitespace
 			source = source.trim();
