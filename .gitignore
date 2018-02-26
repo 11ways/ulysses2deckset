@@ -32,3 +32,4 @@ deck.md
 
 # Ignore examples folder
 example/
+.deck.md

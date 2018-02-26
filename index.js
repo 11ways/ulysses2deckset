@@ -103,9 +103,9 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 
 		// Add theme settings to the top
 		results += 'footer: Introduction to a11y & Inclusive Design • by Roel Van Gils (roel@11ways.be)\n'
-		        += 'slidenumbers: true\n'
-		        += 'autoscale: true\n'
-		        += 'theme: Work, 3\n\n';
+		        +  'slidenumbers: true\n'
+		        +  'autoscale: true\n'
+		        +  'theme: Work, 3\n\n';
 
 		// Count the slides
 		slides_count = 1 + Blast.Bound.String.count(results, '\n---\n');

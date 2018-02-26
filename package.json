@@ -12,6 +12,6 @@
 		"fs-xattr": "^0.2.0",
 		"plist": "~2.1.0",
 		"protoblast": "~0.5.0",
-		"bplist-parser" : "~0.1.1"  
+		"bplist-parser": "~0.1.1"
 	}
 }
