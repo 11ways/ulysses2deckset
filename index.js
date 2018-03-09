@@ -7,18 +7,18 @@ var generateDeck,
     file_path,
     watcher,
     chokidar = require('chokidar'),
-	 libpath  = require('path'),
-	 BPlist   = require('bplist-parser'),
+    libpath  = require('path'),
+    BPlist   = require('bplist-parser'),
     Blast    = require('protoblast')(false),
     Plist    = require('plist'),
-	 xattr    = require('fs-xattr'),
-	 chalk    = require('chalk'),
+    xattr    = require('fs-xattr'),
+    chalk    = require('chalk'),
     uname,
     dir,
     fs = require('fs'),
     Fn = Blast.Bound.Function,
-	 util = require('util'),
-	 exec = require('child_process').exec;
+    util = require('util'),
+    exec = require('child_process').exec;
 
 // Set to true in order to enable debug
 enable_debug = false;
@@ -364,6 +364,11 @@ function processSheet(dirpath, filename, callback) {
 				result += ')';
 
 				return result;
+			});
+
+			// Interpret {{ }} as html elements
+			source = source.replace(/{{ (.*?) }}/g, function eachMatch(match, p1, offset, string) {
+				return '<' + p1 + '>';
 			});
 
 			if (is_bundled) {
