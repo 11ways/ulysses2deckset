@@ -10,7 +10,7 @@ var generateDeck,
     libpath  = require('path'),
     BPlist   = require('bplist-parser'),
     Blast    = require('protoblast')(false),
-    Plist    = require('plist'),
+    Plist    = require('simple-plist'),
     xattr    = require('fs-xattr'),
     chalk    = require('chalk'),
     uname,
@@ -33,10 +33,13 @@ uname = '.Ulysses-Group.plist';
 output_file = '.deck.md';
 
 // Welcome!
-console.log('🦋 Welcome to the Ulysses Deckset Generator!');
+console.log('Welcome to the Ulysses Deckset Generator!');
 
 // Launch Deckset
-exec('rm ' + output_file + ';touch ' + output_file + ';open -a Deckset ' + output_file);
+// exec('rm ' + output_file + ';touch ' + output_file + ';open -a Deckset ' + output_file);
+
+// Launch Marked
+exec('rm ' + output_file + ';touch ' + output_file + ';open -a \'Marked 2\' ' + output_file);
 
 /**
  * Log function
@@ -102,8 +105,8 @@ generateDeck = Blast.Bound.Function.throttle(function generateDeck() {
 		results = Blast.Bound.Array.flatten(results).join('\n\n---\n\n');
 
 		// Add theme settings to the top
-		results = 'footer: Introduction to a11y & Inclusive Design • by Roel Van Gils (roel@11ways.be)\n'
-		        + 'slidenumbers: true\n'
+		results = 'footer: Roel Van Gils (roel@11ways.be)\n'
+		        + 'slidenumbers: false\n'
 		        + 'autoscale: true\n'
 		        + 'build-lists: true\n'
 		        + 'theme: Work, 3\n\n'
@@ -157,14 +160,14 @@ function readDir(dirpath, callback) {
 				return next();
 			}
 
-			fs.readFile(file_path, 'utf8', function gotFile(err, str) {
+			fs.readFile(file_path, function gotFile(err, buf) {
 
 				if (err) {
 					warn('Error reading plist file "' + libpath.relative(dir, file_path) + '":', err.code);
 					return next();
 				}
 
-				order = Plist.parse(str);
+				order = Plist.parse(buf);
 
 				verbose('Ulysses order for:', dirpath, order);
 

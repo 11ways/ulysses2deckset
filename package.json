@@ -10,7 +10,7 @@
 		"chalk": "^2.3.1",
 		"chokidar": "~2.0.2",
 		"fs-xattr": "^0.2.0",
-		"plist": "~2.1.0",
+		"simple-plist": "~0.3.0",
 		"protoblast": "~0.5.0",
 		"bplist-parser": "~0.1.1"
 	}
