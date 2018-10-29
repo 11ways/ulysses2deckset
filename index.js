@@ -39,7 +39,7 @@ console.log('Welcome to the Ulysses Deckset Generator!');
 // exec('rm ' + output_file + ';touch ' + output_file + ';open -a Deckset ' + output_file);
 
 // Launch Marked
-exec('rm ' + output_file + ';touch ' + output_file + ';open -a \'Marked 2\' ' + output_file);
+exec('rm ' + output_file + ';touch ' + output_file + ';open -a Marked' + output_file);
 
 /**
  * Log function
